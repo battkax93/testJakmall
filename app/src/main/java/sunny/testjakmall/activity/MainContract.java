@@ -11,6 +11,7 @@ public interface MainContract {
     interface mainView{
         void init();
         void showProgress();
+        void showDialog();
         void hideProgress();
         void run(int type);
     }

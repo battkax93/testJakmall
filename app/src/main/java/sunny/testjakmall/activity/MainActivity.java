@@ -1,27 +1,25 @@
 package sunny.testjakmall.activity;
 
-import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.SharedPreferences;
-import android.support.design.internal.BottomNavigationMenu;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.roughike.bottombar.BottomBar;
-
 import java.util.ArrayList;
 
 import sunny.testjakmall.R;
-import sunny.testjakmall.network.model.Answer;
 import sunny.testjakmall.network.model.Value;
 
 public class MainActivity extends AppCompatActivity implements MainContract.mainView {
@@ -35,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.main
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
     MainContract.mainPresent present;
-    int cek = 0;
+    int cek = 1;
     Boolean isRefreshing = false;
 
     @Override
@@ -63,11 +61,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.main
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"clicked",Toast.LENGTH_SHORT).show();
+                showDialog();
+                Toast.makeText(getApplicationContext(), "clicked", Toast.LENGTH_SHORT).show();
                 cek++;
                 run(cek);
             }
         });
+
+
 
         swRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -83,6 +84,36 @@ public class MainActivity extends AppCompatActivity implements MainContract.main
     }
 
     @Override
+    public void showDialog() {
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.custom_dialog);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        TextView dialogBtn_cancel = dialog.findViewById(R.id.tv1);
+        dialogBtn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                    Toast.makeText(getApplicationContext(),"Cancel" ,Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+
+        TextView dialogBtn_okay =  dialog.findViewById(R.id.tv2);
+        dialogBtn_okay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                    Toast.makeText(getApplicationContext(),"Okay" ,Toast.LENGTH_SHORT).show();
+                dialog.cancel();
+            }
+        });
+
+        dialog.show();
+    }
+
+    @Override
     public void hideProgress() {
         progressBar.setVisibility(View.GONE);
         swRefresh.setRefreshing(false);
@@ -90,12 +121,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.main
 
     @Override
     public void run(int tipe) {
-        present.getData(this,testAdapter,tipe);
-        if(tipe==3){
+        present.getData(this, testAdapter, tipe);
+        if (tipe == 3) {
             cek = 0;
             tv.setVisibility(View.GONE);
         }
     }
+
 
     private void initRV() {
         layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -104,10 +136,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.main
         rv.setHasFixedSize(true);
     }
 
-    public void scrollToTop(int pos){
-        Log.d("cek","clicked");
-        if ( layoutManager != null) {
-            rv.smoothScrollBy(pos,0);
+
+
+    public void scrollToTop(int pos) {
+        Log.d("cek", "clicked");
+        if (layoutManager != null) {
+            rv.smoothScrollBy(pos, 0);
             testAdapter.notifyDataSetChanged();
         }
     }
