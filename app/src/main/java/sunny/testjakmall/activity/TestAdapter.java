@@ -92,6 +92,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 if(!cek) {
+
                     int i = holder.getAdapterPosition();
                     Toast.makeText(mContext, String.valueOf(i), Toast.LENGTH_SHORT).show();
                     Collections.swap(mItems, 0, position);

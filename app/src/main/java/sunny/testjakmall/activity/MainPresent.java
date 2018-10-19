@@ -55,7 +55,7 @@ public class MainPresent implements MainContract.mainPresent {
                     Toast.makeText(ctx, t.toString(), Toast.LENGTH_SHORT).show();
                 }
             });
-        } else if (tipe == 2){
+        } else if (tipe == 2) {
             mServices.getAnswers2().enqueue(new Callback<Answer>() {
                 @Override
                 public void onResponse(Call<Answer> call, Response<Answer> response) {
@@ -72,21 +72,21 @@ public class MainPresent implements MainContract.mainPresent {
                 }
             });
         } else {
-         mServices.getAnswers3().enqueue(new Callback<Answer>() {
-             @Override
-             public void onResponse(Call<Answer> call, Response<Answer> response) {
-                 Log.d("Status", "success" + response.body().getValue());
-                 adapter.updateAnswers(response.body().getValue());
-                 mView.hideProgress();
-             }
+            mServices.getAnswers3().enqueue(new Callback<Answer>() {
+                @Override
+                public void onResponse(Call<Answer> call, Response<Answer> response) {
+                    Log.d("Status", "success" + response.body().getValue());
+                    adapter.updateAnswers(response.body().getValue());
+                    mView.hideProgress();
+                }
 
-             @Override
-             public void onFailure(Call<Answer> call, Throwable t) {
-                 Log.d("Status", "failed");
-                 mView.hideProgress();
-                 Toast.makeText(ctx, "check your connection", Toast.LENGTH_SHORT).show();
-             }
-         });
+                @Override
+                public void onFailure(Call<Answer> call, Throwable t) {
+                    Log.d("Status", "failed");
+                    mView.hideProgress();
+                    Toast.makeText(ctx, "check your connection", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
