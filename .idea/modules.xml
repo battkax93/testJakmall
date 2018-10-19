@@ -4,7 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://D:\project skripsi\tutorial android\template\testJakmall\app\app.iml" filepath="D:\project skripsi\tutorial android\template\testJakmall\app\app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/testJakmall.iml" filepath="$PROJECT_DIR$/.idea/testJakmall.iml" />
+      <module fileurl="file://$PROJECT_DIR$/testJakmall.iml" filepath="$PROJECT_DIR$/testJakmall.iml" />
+      <module fileurl="file://F:\eko\android-architecture-todo-mvp-clean\testJakmall\.idea\testJakmall.iml" filepath="F:\eko\android-architecture-todo-mvp-clean\testJakmall\.idea\testJakmall.iml" />
       <module fileurl="file://D:\project skripsi\tutorial android\template\testJakmall\testJakmall.iml" filepath="D:\project skripsi\tutorial android\template\testJakmall\testJakmall.iml" />
     </modules>
   </component>

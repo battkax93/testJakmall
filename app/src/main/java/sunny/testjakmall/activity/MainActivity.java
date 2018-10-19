@@ -1,8 +1,10 @@
 package sunny.testjakmall.activity;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.SharedPreferences;
-import android.graphics.drawable.ColorDrawable;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -10,9 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,16 +25,15 @@ import sunny.testjakmall.network.model.Value;
 public class MainActivity extends AppCompatActivity implements MainContract.mainView {
 
     TestAdapter testAdapter;
+    static Dialog dialog;
     RecyclerView rv;
     RecyclerView.LayoutManager layoutManager;
     SwipeRefreshLayout swRefresh;
     ProgressBar progressBar;
     TextView tv;
-    SharedPreferences prefs;
-    SharedPreferences.Editor editor;
     MainContract.mainPresent present;
     int cek = 1;
-    Boolean isRefreshing = false;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +41,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.main
         setContentView(R.layout.activity_main);
 
         init();
+        pDialog();
         initRV();
+        run(1);
     }
 
     @Override
@@ -61,14 +62,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.main
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialog();
-                Toast.makeText(getApplicationContext(), "clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "+1 item", Toast.LENGTH_SHORT).show();
                 cek++;
                 run(cek);
             }
         });
-
-
 
         swRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -80,69 +78,45 @@ public class MainActivity extends AppCompatActivity implements MainContract.main
 
     @Override
     public void showProgress() {
+        progressDialog.show();
         progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void showDialog() {
-
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.custom_dialog);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
-        TextView dialogBtn_cancel = dialog.findViewById(R.id.tv1);
-        dialogBtn_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                    Toast.makeText(getApplicationContext(),"Cancel" ,Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-            }
-        });
-
-        TextView dialogBtn_okay =  dialog.findViewById(R.id.tv2);
-        dialogBtn_okay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                    Toast.makeText(getApplicationContext(),"Okay" ,Toast.LENGTH_SHORT).show();
-                dialog.cancel();
-            }
-        });
-
-        dialog.show();
+    public void showDialog(Context ctx) {
     }
 
     @Override
     public void hideProgress() {
+        progressDialog.dismiss();
         progressBar.setVisibility(View.GONE);
         swRefresh.setRefreshing(false);
     }
 
     @Override
     public void run(int tipe) {
+        progressDialog.show();
         present.getData(this, testAdapter, tipe);
         if (tipe == 3) {
             cek = 0;
             tv.setVisibility(View.GONE);
         }
+        progressDialog.dismiss();
     }
 
+    public void pDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setProgress(0);
+    }
 
-    private void initRV() {
+    public void initRV() {
         layoutManager = new LinearLayoutManager(getApplicationContext());
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(testAdapter);
         rv.setHasFixedSize(true);
     }
 
-
-
-    public void scrollToTop(int pos) {
-        Log.d("cek", "clicked");
-        if (layoutManager != null) {
-            rv.smoothScrollBy(pos, 0);
-            testAdapter.notifyDataSetChanged();
-        }
-    }
 }
